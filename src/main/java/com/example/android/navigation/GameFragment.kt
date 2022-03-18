@@ -59,8 +59,8 @@ class GameFragment : Fragment() {
 
     lateinit var currentQuestion: Question
     lateinit var answers: MutableList<String>
-    private var questionIndex = 0
-    private val numQuestions = Math.min((questions.size + 1) / 2, 3)
+    private var questionIndex: Int = 0
+    private val numQuestions: Int = Math.min((questions.size + 1) / 2, 3)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -99,7 +99,7 @@ class GameFragment : Fragment() {
                     } else {
                         // We've won!  Navigate to the gameWonFragment.
 
-                        view.findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameWonFragment())
+                        view.findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameWonFragment(questionIndex, numQuestions))
                     }
                 } else {
                     // Game over! A wrong answer sends us to the gameOverFragment.

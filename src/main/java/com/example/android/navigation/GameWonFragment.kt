@@ -22,6 +22,7 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.android.navigation.databinding.FragmentGameWonBinding
 
 
@@ -34,7 +35,7 @@ class GameWonFragment : Fragment() {
         binding.nextMatchButton.setOnClickListener{view: View->
             view.findNavController().navigate(GameWonFragmentDirections.actionGameWonFragmentToGameFragment())
         }
-        //var args = GameWonFragmentArgs
+
         setHasOptionsMenu(true)
 
         return binding.root
@@ -43,10 +44,28 @@ class GameWonFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.winner_menu,menu)
+        if(getShareIntent().resolveActivity(activity!!.packageManager)==null){
+            menu?.findItem(R.id.share)?.setVisible(false)
+        }
     }
 
-//    private fun getShareIntent() : Intent {
-//        //var args = GameWonFragmentArgs.
-//    }
+    private fun getShareIntent() : Intent {
+        val args: GameWonFragmentArgs by navArgs()
+        val shareIntent: Intent = Intent(Intent.ACTION_SEND)
+        shareIntent.setType("text/plain").putExtra(Intent.EXTRA_TEXT,
+            getString(R.string.share_success_text,args.numCorrect,args.numQuestions))
+        return shareIntent
+    }
 
+    private fun shareSuccess(){
+        startActivity(getShareIntent())
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when(item!!.itemId){
+            R.id.share->shareSuccess()
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }
